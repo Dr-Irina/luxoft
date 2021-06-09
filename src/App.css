@@ -1,0 +1,26 @@
+.App {
+  text-align: center;
+}
+.error {
+  color: red
+}
+.debug {
+  color: green
+}
+.warning {
+  color: yellow
+}
+.ant-table {
+  background: #F2F3F6 !important;
+}
+.ant-select-selector, .search {
+  width: 250px !important;
+}
+.filters {
+  display: flex;
+  padding: 32px 100px;
+  justify-content: center;
+}
+.search {
+  margin-left: 32px;
+}
