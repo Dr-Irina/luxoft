@@ -1,14 +1,22 @@
 .App {
   text-align: center;
 }
+.tag {
+  width: min-content;
+  border-radius: 8px;
+  padding: 5px 10px;
+}
 .error {
-  color: red
+  color: #ff4545;
+  background-color: #ffdbdb;
 }
 .debug {
-  color: green
+  color: #198319;
+  background-color: #daffda;
 }
 .warning {
-  color: yellow
+  color: #ff9a32;
+  background-color: #fff0e0
 }
 .ant-table {
   background: #F2F3F6 !important;
@@ -23,4 +31,10 @@
 }
 .search {
   margin-left: 32px;
+}
+.btnMargin {
+  margin-right: 32px;
+}
+.btnContainer {
+  margin-bottom: 32px;
 }

@@ -8,6 +8,7 @@ export enum EType {
 	DEBUG= 'debug',
 }
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default  [
 	{
 		title: 'type',
@@ -15,6 +16,7 @@ export default  [
 		key: 'type',
 		render: (item: string, record: any) => <p className={
 			cx({
+				'tag': true,
 				'error': record.type === EType.ERROR,
 				'debug': record.type === EType.DEBUG,
 				'warning': record.type === EType.WARNING,
