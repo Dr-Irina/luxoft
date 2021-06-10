@@ -16,7 +16,7 @@ const App = () => {
   const [listItem, setListItem] = useState<TListItem[]>([]);
   const [fullList, setFullList] = useState<TListItem[]>([]);
   const [inputVal, setInputVal] = useState('');
-  const [selectVal, setSelectVal] = useState('all');
+  const [selectVal, setSelectVal] = useState(EType.ALL);
 
   const send = () => {
       client.send(JSON.stringify({
@@ -54,16 +54,16 @@ const App = () => {
   }, []);
   const filter = useCallback(() => {
       const filterArr = fullList.filter(item => item.text.includes(inputVal));
-      setListItem(selectVal === 'all' ? filterArr : filterArr.filter(item => item.type === selectVal));
+      setListItem(selectVal === EType.ALL ? filterArr : filterArr.filter(item => item.type === selectVal));
   }, [fullList, inputVal, selectVal]);
 
   const clearFilters = useCallback(() => {
-      setSelectVal('');
-      setSelectVal('all');
+      setInputVal('');
+      setSelectVal(EType.ALL);
       send();
   }, []);
   const options = [
-      {value: 'all', label: 'all'},
+      {value: EType.ALL, label: EType.ALL},
       {value: EType.ERROR, label: EType.ERROR},
       {value: EType.WARNING, label: EType.WARNING},
       {value: EType.INFO, label: EType.INFO},

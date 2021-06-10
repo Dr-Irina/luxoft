@@ -2,6 +2,7 @@ import cx from "classnames";
 import React from "react";
 
 export enum EType {
+	ALL = 'all',
 	ERROR= 'error',
 	WARNING= 'warning',
 	INFO= 'info',
