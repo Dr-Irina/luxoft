@@ -17,34 +17,51 @@ const App = () => {
   const [fullList, setFullList] = useState<TListItem[]>([]);
   const [inputVal, setInputVal] = useState('');
   const [selectVal, setSelectVal] = useState(EType.ALL);
+  const [offset, setOffset] = useState(0);
+  const [buffer, setBuffer] = useState('');
+  const SIZE = 500;
 
-  const send = () => {
+  const send = useCallback(() => {
       client.send(JSON.stringify({
           id: +Date.now(),
           method: 'get_data_chunk',
-          params: {offset: 0, size: 10000},
+          params: {offset, size: SIZE},
       }));
-  }
+      setOffset(offset + SIZE);
+  }, [offset]);
+
   const parseList = (tmpList: string[]) => {
       const parse = tmpList.map(item => {
           const splitArr = item.split(' ');
-          const type = splitArr[0].toLowerCase().slice(1, -1);
-          const date = splitArr[1].slice(1, -1);
+          const type = splitArr[0] && splitArr[0].toLowerCase().slice(1, -1);
+          const date = splitArr[1] && splitArr[1].slice(1, -1);
           const text = splitArr.slice(2).join(' ');
           return { type, text, date };
       })
       setFullList(parse);
       setListItem(parse);
   }
+  const writeToBuffer = useCallback((message) => setBuffer(buffer.concat(window.atob(message))), [buffer] )
   useEffect(() => {
-    client.onopen = () => send();
-    client.onmessage = (message: any) => {
-        const mParse = JSON.parse(message.data);
-        if (mParse.result.ok) {
-            parseList(window.atob(mParse.result.ok).split('\n').filter(item => item.length > 0));
-        }
-    }
-  }, []);
+      client.onopen = () => send();
+      client.onmessage = (message: any) => {
+          const mParse = JSON.parse(message.data);
+          if (mParse.result.ok) {
+              writeToBuffer(mParse.result.ok);
+          }
+      }
+  }, [send, writeToBuffer]);
+
+  useEffect(() => {
+      const timer = setInterval(() => {
+          send();
+      }, 2000);
+      return () => clearInterval(timer);
+  }, [send]);
+
+  useEffect(() => {
+      parseList(buffer.split('\n').filter(item => item.length > 0));
+  }, [buffer]);
 
   const filterSelect = useCallback((options) => {
       setSelectVal(options);
@@ -61,7 +78,7 @@ const App = () => {
       setInputVal('');
       setSelectVal(EType.ALL);
       send();
-  }, []);
+  }, [send]);
   const options = [
       {value: EType.ALL, label: EType.ALL},
       {value: EType.ERROR, label: EType.ERROR},
